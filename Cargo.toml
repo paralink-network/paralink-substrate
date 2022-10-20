@@ -1,11 +1,12 @@
 [profile.release]
-panic = 'unwind'
+panic = "unwind"
 
 [workspace]
 members = [
-    'node',
-    'pallets/quorum',
-    'pallets/template',
-    'runtime',
+	"node",
+	"pallets/ink-extension/contract",
+	"pallets/ink-extension/runtime",
+	"pallets/xcm",
+	"runtime",
 ]
-exclude = ['playground', 'pallets/ocw']
+exclude = ['playground', 'pallets/ocw', 'pallets/quorum']

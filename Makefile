@@ -1,6 +1,14 @@
 .PHONY: init
+
+configure-rust:
+	rustup install 1.62.1
+	rustup override set 1.62.1
+	rustup toolchain install nightly-2022-08-08
+	rustup target add wasm32-unknown-unknown --toolchain nightly-2022-08-08
+	rustup component add clippy
 init:
-	./scripts/init.sh
+	make configure-rust
+	git submodule update --init --recursive
 
 .PHONY: check
 check:

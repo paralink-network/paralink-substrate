@@ -1,0 +1,37 @@
+[package]
+name = "paralink-ink-runtime"
+version = "0.0.1"
+authors = ["Paralink"]
+description = "Paralink ink! extension (runtime part)"
+edition = "2021"
+license = "Unlicense"
+publish = false
+
+[dependencies]
+log = { version = "0.4", default-features = false }
+codec = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+sp-std = { version = "4.0.0-dev", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "polkadot-v0.9.27" }
+frame-system = { version = "4.0.0-dev", default-features = false, git = 'https://github.com/paritytech/substrate.git', branch = "polkadot-v0.9.27" }
+frame-support = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+pallet-contracts = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
+
+#pallet-chainlink-feed = { git = "https://github.com/LaurentTrk/chainlink-polkadot", default-features = false,  branch = "sublink" }
+#sublink-parachain-oracle = { path = '../../parachain-oracle', default-features = false }
+paralink-xcm = { path = '../../xcm', default-features = false }
+
+#paralink-ink-contract-extension = {path = '../contract', default-features = false}
+
+[features]
+default = ["std"]
+std = [
+    "log/std",
+    "codec/std",
+    "sp-std/std",
+    "frame-system/std",
+    "frame-support/std",
+    "pallet-contracts/std",
+    #"paralink-ink-contract-extension/std"
+    #"pallet-chainlink-feed/std",
+    #"sublink-parachain-oracle/std",
+		"paralink-xcm/std",
+]
