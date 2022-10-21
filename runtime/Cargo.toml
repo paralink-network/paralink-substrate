@@ -84,8 +84,8 @@ pallet-contracts-rpc-runtime-api = { version = "4.0.0-dev", default-features = f
 pallet-randomness-collective-flip = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.27" }
 
 # Paralink
-paralink-ink-runtime = { path = "../pallets/ink-extension/runtime", default-features = false  }
-paralink-xcm = { path = "../pallets/xcm", default-features = false}
+paralink-ink-runtime = { git = "https://github.com/paralink-network/paralink-pallets", default-features = false, branch = "master"  }
+paralink-xcm = { git = "https://github.com/paralink-network/paralink-pallets", default-features = false, branch = "master"  }
 
 [features]
 default = [
