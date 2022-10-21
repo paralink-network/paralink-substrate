@@ -1,4 +1,5 @@
 #!/bin/bash
+# Generates specification for the paralink parachain, assumes the parachain ID 2001
 
 # Location independent running
 scriptDir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")
@@ -26,6 +27,3 @@ sed -i 's@parachainId": 1000@parachainId": 2001@g'  "$PLAIN_SPEC"
 # Generate validation function and genesis state
 "$scriptDir"/../target/release/paralink-node export-genesis-wasm --chain "$RAW_SPEC" > "$WASM_VALIDATION"
 "$scriptDir"/../target/release/paralink-node export-genesis-state --chain "$RAW_SPEC"> "$GENESIS"
-
-# Start the chain
-"$scriptDir"/../target/release/paralink-node --collator --bob --force-authoring --tmp --port 40337 --ws-port 9948 --rpc-external --ws-external --rpc-cors all --rpc-methods=Unsafe  --chain "$RAW_SPEC" -- --execution wasm --chain "$RELAY_CHAIN_SPEC" --port 30337

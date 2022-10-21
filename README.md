@@ -8,13 +8,13 @@ This repository contains Substrate based runtime for Paralink Network.
 
 This project uses a [Makefile](Makefile) to document helpful commands and make it easier to execute them.
 
-1. `make init` - Run the [init script](scripts/init.sh) to configure the Rust toolchain for
+1. `make init` - Configures the correct Rust toolchain for
    [WebAssembly compilation](https://substrate.dev/docs/en/knowledgebase/getting-started/#webassembly-compilation).
-1. `make run` - Build and launch this project in development mode.
+2. `make build` - Build the chain in release mode.
+3. `make run` - Runs the chain in release mode. However, a local relay chain has to be setup first. See [paralink-xcm](https://github.com/paralink-network/paralink-xcm) repo and run the parachain from there.
+4. `make generate-specs` - generates specification for the parachain.
 
 ### Build
-
-The `make run` command will perform an initial build. Use the following command to build the node without launching it:
 
 ```sh
 make build
@@ -30,45 +30,4 @@ Once the project has been built, the following command can be used to explore al
 
 ## Run
 
-The `make run` command will launch a temporary node and its state will be discarded after you terminate the process. After the project has been built, there are other ways to launch the node.
-
-### Single-Node Development Chain
-
-This command will start the single-node development chain with persistent state:
-
-```bash
-./target/release/paralink-node --dev
-```
-
-Purge the development chain's state:
-
-```bash
-./target/release/paralink-node purge-chain --dev
-```
-
-Start the development chain with detailed logging:
-
-```bash
-RUST_LOG=debug RUST_BACKTRACE=1 ./target/release/paralink-node -lruntime=debug --dev
-```
-
-### Run in Docker
-
-Then run the following command to start a single node development chain.
-
-```bash
-./scripts/docker_run.sh
-```
-
-This command will firstly compile your code, and then start a local development network. You can also replace the default command (`cargo build --release && ./target/release/paralink-node --dev --ws-external`) by appending your own. A few useful ones are as follow.
-
-```bash
-# Run Substrate node without re-compiling
-./scripts/docker_run.sh ./target/release/paralink-node --dev --ws-external
-
-# Purge the local dev chain
-./scripts/docker_run.sh ./target/release/paralink-node purge-chain --dev
-
-# Check whether the code is compilable
-./scripts/docker_run.sh cargo check
-```
+The `make run` command will launch the Paralink parachain and will try to connect to the local relay chain. See the scripts `run-paralink.sh` in `scripts`. Use [paralink-xcm](https://github.com/paralink-network/paralink-xcm) repo to setup the whole environment.

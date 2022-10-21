@@ -10,6 +10,9 @@ init:
 	make configure-rust
 	git submodule update --init --recursive
 
+generate-specs:
+	./scripts/setup-paralink-2001.sh
+
 .PHONY: check
 check:
 	SKIP_WASM_BUILD=1 cargo check
@@ -20,7 +23,7 @@ test:
 
 .PHONY: run
 run:
-	cargo run -- --dev --tmp
+	./scripts/run-paralink.sh
 
 .PHONY: build
 build:
