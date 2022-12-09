@@ -631,7 +631,7 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Event<T>, Origin} = 32,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 33,
 
-		ParalinkXcm: paralink_xcm = 50,
+		ParalinkFeeds: paralink_feeds::{Pallet, Call, Storage, Event<T>, Config<T>} = 50,
 		Spambot: cumulus_ping::{Pallet, Call, Storage, Event<T>} = 99,
 
 		// Template

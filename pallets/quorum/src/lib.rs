@@ -1,17 +1,16 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use sp_std::prelude::*;
-use sp_core::H256;
 use frame_support::{
 	codec::{Decode, Encode},
-	traits::{Currency, ReservableCurrency, WithdrawReasons, ExistenceRequirement},
-	dispatch::{DispatchResult, DispatchResultWithPostInfo},
 	decl_error, decl_event, decl_module, decl_storage,
-	ensure};
-use frame_system::{self as system, ensure_signed};
-use sp_runtime::{
-	RuntimeDebug,
+	dispatch::{DispatchResult, DispatchResultWithPostInfo},
+	ensure,
+	traits::{Currency, ExistenceRequirement, ReservableCurrency, WithdrawReasons},
 };
+use frame_system::{self as system, ensure_signed};
+use sp_core::H256;
+use sp_runtime::RuntimeDebug;
+use sp_std::prelude::*;
 
 #[cfg(feature = "std")]
 pub use serde::{Deserialize, Serialize};
@@ -29,14 +28,11 @@ pub const MAX_VALID_PERIOD: u32 = 100;
 /// How much does it cost to create a new quorum
 pub const QUORUM_CREATION_FEE: u32 = 1;
 
-
-pub type BalanceOf<T> = <<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
+pub type BalanceOf<T> =
+	<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 pub type QuorumOf<T> = Quorum<<T as system::Config>::AccountId, BalanceOf<T>>;
-pub type RequestOf<T> = Request<
-	<T as system::Config>::AccountId,
-	BalanceOf<T>,
-	<T as system::Config>::BlockNumber,
->;
+pub type RequestOf<T> =
+	Request<<T as system::Config>::AccountId, BalanceOf<T>, <T as system::Config>::BlockNumber>;
 /// Currently supported answer type
 pub type Answer = i64;
 pub type QuorumIndex = u32;
@@ -152,7 +148,6 @@ pub struct Request<AccountId, BalanceOf, BlockNumber> {
 	// TODO callback status
 }
 
-
 decl_storage! {
 	trait Store for Module<T: Config> as RelayerQuorums {
 		/// Number of existing quorums. Also used as a hashmap index.
@@ -180,17 +175,17 @@ decl_event!(
 		AccountId = <T as system::Config>::AccountId,
 		Balance = BalanceOf<T>,
 		BlockNumber = <T as system::Config>::BlockNumber,
-		{
-			QuorumCreated(QuorumIndex, AccountId),
-			RelayerAdded(QuorumIndex, AccountId),
-			RelayerRemoved(QuorumIndex, AccountId),
-			UserAdded(QuorumIndex, AccountId),
-			UserRemoved(QuorumIndex, AccountId),
-			NewRequest(QuorumIndex, AccountId, Balance, BlockNumber),
-			RequestExpired(RequestIndex),
-			RequestInvalidated(RequestIndex),
-			NewAnswer(RequestIndex, AccountId, Answer),
-		}
+	{
+		QuorumCreated(QuorumIndex, AccountId),
+		RelayerAdded(QuorumIndex, AccountId),
+		RelayerRemoved(QuorumIndex, AccountId),
+		UserAdded(QuorumIndex, AccountId),
+		UserRemoved(QuorumIndex, AccountId),
+		NewRequest(QuorumIndex, AccountId, Balance, BlockNumber),
+		RequestExpired(RequestIndex),
+		RequestInvalidated(RequestIndex),
+		NewAnswer(RequestIndex, AccountId, Answer),
+	}
 );
 
 decl_error! {
@@ -474,35 +469,33 @@ decl_module! {
 }
 
 impl<T: Config> Module<T> {
-
 	/// Find a request
-	pub fn find_request(request_id: RequestIndex) ->
-		Result<Request<T::AccountId, BalanceOf<T>, T::BlockNumber>, Error<T>>
-	{
+	pub fn find_request(
+		request_id: RequestIndex,
+	) -> Result<Request<T::AccountId, BalanceOf<T>, T::BlockNumber>, Error<T>> {
 		ensure!(<Requests<T>>::contains_key(&request_id), Error::<T>::InvalidRequest);
 		let request = <Requests<T>>::get(&request_id);
 		Ok(request)
 	}
 
 	/// Find a quorum
-	pub fn find_quorum(quorum_id: QuorumIndex) ->
-		Result<Quorum<T::AccountId, BalanceOf<T>>, Error<T>>
-	{
+	pub fn find_quorum(
+		quorum_id: QuorumIndex,
+	) -> Result<Quorum<T::AccountId, BalanceOf<T>>, Error<T>> {
 		ensure!(<Quorums<T>>::contains_key(&quorum_id), Error::<T>::InvalidQuorum);
 		let quorum = <Quorums<T>>::get(&quorum_id);
 		Ok(quorum)
 	}
 
 	/// Find and return a quorum and the location of its relayer
-	pub fn find_quorum_relayer(quorum_id: QuorumIndex, relayer: T::AccountId) ->
-		Result<(Quorum<T::AccountId, BalanceOf<T>>, usize), Error<T>>
-	{
+	pub fn find_quorum_relayer(
+		quorum_id: QuorumIndex,
+		relayer: T::AccountId,
+	) -> Result<(Quorum<T::AccountId, BalanceOf<T>>, usize), Error<T>> {
 		let quorum = Self::find_quorum(quorum_id)?;
 
 		match quorum.relayers.binary_search(&relayer) {
-			Ok(index) => {
-				Ok((quorum, index))
-			},
+			Ok(index) => Ok((quorum, index)),
 			Err(_) => Err(Error::<T>::NotRelayer.into()),
 		}
 	}
@@ -517,11 +510,9 @@ impl<T: Config> Module<T> {
 		T::Currency::free_balance(&user)
 	}
 
-
 	//
 	// Internal methods
 	//
-
 
 	/// Distribute pending_rewards between quorum relayers
 	fn _distribute_pending_rewards() {
@@ -531,19 +522,23 @@ impl<T: Config> Module<T> {
 	/// Check if the validation rule applies to submitted answers
 	fn _validate(request: &Request<T::AccountId, BalanceOf<T>, T::BlockNumber>) -> bool {
 		// do not use this function before validating sufficient n of responses
-		if request.answers.len() < request.min_participation as usize { panic!(); }
+		if request.answers.len() < request.min_participation as usize {
+			panic!();
+		}
 
 		match request.validation_rule {
-			ValidationRule::Pass=> true,
+			ValidationRule::Pass => true,
 			ValidationRule::VarianceThreshold(var) => false, // TODO
-			ValidationRule::ConsensusThreshold(n) => false, // TODO
+			ValidationRule::ConsensusThreshold(n) => false,  // TODO
 		}
 	}
 
 	/// Apply the validation rule to submitted answers
 	fn _aggregate(request: &Request<T::AccountId, BalanceOf<T>, T::BlockNumber>) -> Answer {
 		// do not use this function before validating sufficient n of responses
-		if request.answers.len() < request.min_participation as usize { panic!(); }
+		if request.answers.len() < request.min_participation as usize {
+			panic!();
+		}
 
 		match request.aggregation_rule {
 			AggregationRule::Min => *request.answers.iter().min().unwrap(),
@@ -561,13 +556,12 @@ impl<T: Config> Module<T> {
 		// send the result via XCMP?
 		// emit the event
 	}
-
 }
 
 #[allow(dead_code)]
 mod math {
-	use sp_std::prelude::*; // Vec
 	use super::Answer;
+	use sp_std::prelude::*; // Vec
 
 	// TODO: make this generic
 	pub fn mean(xs: &Vec<Answer>) -> Answer {
@@ -586,5 +580,4 @@ mod math {
 		// BTreeMap
 		0.into()
 	}
-
 }

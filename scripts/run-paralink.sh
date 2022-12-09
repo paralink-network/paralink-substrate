@@ -6,7 +6,7 @@ RELAY_CHAIN_SPEC="$scriptDir"/../assets/polkadot-relay-chain-spec.json
 RAW_SPEC="$scriptDir"/../assets/paralink-2001-raw.json
 
 # Build chain
-(cd "$scriptDir"; cargo build --release)
+(cd "$scriptDir"; cargo build --release) || exit $?
 
 echo "$scriptDir"
 

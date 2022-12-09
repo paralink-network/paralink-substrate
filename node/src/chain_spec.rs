@@ -94,7 +94,7 @@ pub fn development_config() -> ChainSpec {
 					get_account_id_from_seed::<sr25519::Public>("Eve//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
 				],
-				1000.into(),
+				2001.into(),
 			)
 		},
 		Vec::new(),
@@ -104,7 +104,7 @@ pub fn development_config() -> ChainSpec {
 		Some(para_properties()),
 		Extensions {
 			relay_chain: "rococo-local".into(), // You MUST set this to the correct network!
-			para_id: 1000,
+			para_id: 2001,
 		},
 	)
 }
@@ -143,7 +143,7 @@ pub fn local_testnet_config() -> ChainSpec {
 					get_account_id_from_seed::<sr25519::Public>("Eve//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
 				],
-				1000.into(),
+				2001.into(),
 			)
 		},
 		// Bootnodes
@@ -159,7 +159,7 @@ pub fn local_testnet_config() -> ChainSpec {
 		// Extensions
 		Extensions {
 			relay_chain: "rococo-local".into(), // You MUST set this to the correct network!
-			para_id: 1000,
+			para_id: 2001,
 		},
 	)
 }
@@ -214,6 +214,11 @@ fn testnet_genesis(
 		parachain_system: Default::default(),
 		polkadot_xcm: paralink_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
+		},
+		paralink_feeds: paralink_runtime::ParalinkFeedsConfig {
+			// make Ferdie the pallet admin
+			pallet_admin: Some(get_account_id_from_seed::<sr25519::Public>("Ferdie")),
+			feed_creators: vec![get_account_id_from_seed::<sr25519::Public>("Alice")],
 		},
 	}
 }

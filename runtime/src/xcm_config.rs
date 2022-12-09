@@ -3,6 +3,7 @@ use super::{
 	WeightToFee, XcmpQueue,
 };
 use core::marker::PhantomData;
+use cumulus_primitives_core::ParaId;
 use frame_support::{
 	log, match_types, parameter_types,
 	traits::{Everything, Nothing},
@@ -228,9 +229,23 @@ impl cumulus_ping::Config for Runtime {
 	type XcmSender = XcmRouter;
 }
 
-impl paralink_xcm::Config for Runtime {
+// Paralink
+parameter_types! {
+	pub const StringLimit: u32 = 20;
+	pub const FeedStakingBalance: u64 = 10_000;
+	pub const ParalinkParaId: ParaId = ParaId::new(2001);
+}
+impl paralink_feeds::Config for Runtime {
+	type FeedId = u32;
+	type Value = u128;
 	type Event = Event;
+	type Currency = Balances;
+	type StringLimit = StringLimit;
+	type FeedStakingBalance = FeedStakingBalance;
+	type WeightInfo = ();
 	type Origin = Origin;
 	type Call = Call;
 	type XcmSender = XcmRouter;
+	type ParalinkParaId = ParalinkParaId;
+	type SelfParaId = parachain_info::Pallet<Runtime>;
 }

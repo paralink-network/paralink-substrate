@@ -5816,15 +5816,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "paralink-feeds"
+version = "0.0.1"
+dependencies = [
+ "cumulus-pallet-xcm",
+ "cumulus-primitives-core",
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "log",
+ "pallet-balances",
+ "pallet-xcm",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-arithmetic",
+ "sp-core",
+ "sp-debug-derive",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+ "xcm",
+ "xcm-builder",
+ "xcm-executor",
+]
+
+[[package]]
 name = "paralink-ink-runtime"
 version = "0.0.1"
-source = "git+https://github.com/paralink-network/paralink-pallets?branch=master#f2b89860464a7009527682f1f7950094f309254b"
 dependencies = [
  "frame-support",
  "frame-system",
  "log",
  "pallet-contracts",
- "paralink-xcm",
+ "paralink-feeds",
  "parity-scale-codec",
  "sp-std",
 ]
@@ -5936,8 +5960,8 @@ dependencies = [
  "pallet-transaction-payment-rpc-runtime-api",
  "pallet-xcm",
  "parachain-info",
+ "paralink-feeds",
  "paralink-ink-runtime",
- "paralink-xcm",
  "parity-scale-codec",
  "polkadot-parachain",
  "polkadot-runtime-common",
@@ -5960,24 +5984,6 @@ dependencies = [
  "xcm",
  "xcm-builder",
  "xcm-executor",
-]
-
-[[package]]
-name = "paralink-xcm"
-version = "0.0.1"
-source = "git+https://github.com/paralink-network/paralink-pallets?branch=master#f2b89860464a7009527682f1f7950094f309254b"
-dependencies = [
- "cumulus-pallet-xcm",
- "cumulus-primitives-core",
- "frame-support",
- "frame-system",
- "log",
- "parity-scale-codec",
- "scale-info",
- "serde",
- "sp-runtime",
- "sp-std",
- "xcm",
 ]
 
 [[package]]
